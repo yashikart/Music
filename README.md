@@ -1,4 +1,41 @@
+sirs practical. 
 
+
+import torch
+from diffusers import StableDiffusionInpaintPipeline
+from PIL import Image
+# Load Stable Diffusion Inpainting Model in FP16
+device = "cuda" if torch.cuda.is_available() else "cpu"
+pipe = StableDiffusionInpaintPipeline.from_pretrained(
+ "runwayml/stable-diffusion-inpainting",
+ torch_dtype = torch.float16, # Enables FP16 precision for faster infer
+).to(device)
+# Load Input Image and Mask
+image = Image.open("sketch1.jpg").convert("RGB")
+mask_image = Image.open("mask.jpg").convert("L")
+# Define the text prompt
+prompt = "A real life face"
+# Run the inpainting model with *reduced inference steps**
+result = pipe(
+ prompt = prompt,
+ image = image,
+ mask_image = mask_image,
+ num_inference_steps = 30, # Reduce steps for faster generation (Defaul
+).images[0]
+# Save and Show the Result
+result.save("inpainted_image.jpg")
+result.show()
+print("AI-generated inpainted image saved as 'inpainted_image.jpg'")
+
+
+
+
+
+
+
+
+
+don't use this use sirs practical 
 #!pip install transformers datasets accelerate torch scipy
 
 from transformers import AutoProcessor, MusicgenForConditionalGeneration
